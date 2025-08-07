@@ -10,3 +10,9 @@
 4. Lisez bien l'entièreté du brief avant de démarrer, n'hésitez pas à poser votre architecture sur papier (ou du moins à y réfléchir sur un support autre que l'IDE) avant de coder. 
 
 ➡️ [Cliquez ici pour lire le brief du client](BRIEF.md)
+
+## Compte-rendu du développement
+
+  1) Choix de la stack
+Langage : Python 3.12
+Framework : Django ->
