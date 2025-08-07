@@ -18,42 +18,42 @@ Stack : Django, Langchain, Ollama, Stable Diffusion XL, TailwindCSS, Docker
  ## 1) Choix de la stack
 
 ### Backend : Framework Django
-  -> Robuste et facile à déployer. ORM intégré, gestion des templates inclues, sécurité native.
-  -> L'alternative Flask aurait demandé beaucoup plus de temps pour coder à la main les formulaires, la gestion admin, l'ORM.
+  -> Robuste et facile à déployer. ORM intégré, gestion des templates inclues, sécurité native.  
+  -> L'alternative Flask aurait demandé beaucoup plus de temps pour coder à la main les formulaires, la gestion admin, l'ORM.  
 
 ### Frontend : Framework Django (Templates) + TailwindCSS
-  -> Templates suffisant pour un projet de cette envergure (2 pages et un mode admin)
-  -> Alternative : React. Overkill pour un projet de cette taille, aurait nécessité une plus grosse gestion des droits, sécurité CSRF, CORS
-  -> TailwindCSS : tout ce qui peut alléger le CSS est bon à prendre !
-  -> widget-tweaks : personnalisation facilitée des formulaires Django
+  -> Templates suffisant pour un projet de cette envergure (2 pages et un mode admin)  
+  -> Alternative : React. Overkill pour un projet de cette taille, aurait nécessité une plus grosse gestion des droits, sécurité CSRF, CORS  
+  -> TailwindCSS : tout ce qui peut alléger le CSS est bon à prendre !  
+  -> widget-tweaks : personnalisation facilitée des formulaires Django  
 
 ### LLM : Ollama (local) 
-  -> LLM local open-source, nécessitant une machine capable de le faire tourner, mais utilisable hors ligne et sans dépendance ni fuite de données.
-  -> LangChain : simplification de la gestion des prompts pour les LLM, gestion détaillée du cycle de vie
-  -> Possiblité de choisir entre plusieurs modèles (par défaut, Llama3 et Mixtral, mais extensible facilement)
-    - Llama3 : créatif, léger et rapide. Peut avoir du mal à respecter le format demandé dans ses réponses.
-    - Mixtral : plus costaud, nécessite une bonne machine et beaucoup de RAM (suggéré : 32GB), mais très efficace et imaginatif
-
+  -> LLM local open-source, nécessitant une machine capable de le faire tourner, mais utilisable hors ligne et sans dépendance ni fuite de données.  
+  -> LangChain : simplification de la gestion des prompts pour les LLM, gestion détaillée du cycle de vie  
+  -> Possiblité de choisir entre plusieurs modèles (par défaut, Llama3 et Mixtral, mais extensible facilement)  
+    - Llama3 : créatif, léger et rapide. Peut avoir du mal à respecter le format demandé dans ses réponses.  
+    - Mixtral : plus costaud, nécessite une bonne machine et beaucoup de RAM (suggéré : 32GB), mais très efficace et imaginatif  
+ 
 ### Génération d'image : Stable Diffusion XL
-  -> Accessible via API (pas de déploiement local supplémentaire, les LLMs consomme déjà beaucoup)
-  -> Bonne qualité d'image, respecte bien les prompts
-  -> Désavantages : Limitation du nombre de réalisation (crédits), nécessite des prompts en anglais exclusivement
+  -> Accessible via API (pas de déploiement local supplémentaire, les LLMs consomme déjà beaucoup)  
+  -> Bonne qualité d'image, respecte bien les prompts  
+  -> Désavantages : Limitation du nombre de réalisation (crédits), nécessite des prompts en anglais exclusivement  
 
  ## 2) Installation
--> Clone du repo
--> Création de l'environnement virtuel et installation des dépendances
-    python -m venv .env
-    .venv\Scripts\activate    (sous Windows)
-    pip install -r requirements.txt
--> Variables d'environnement : jeu de test proposé
--> Installation d'Ollama : installer les modèles proposés (au moins llama3, plus léger ~3 à 4 GB)
-    Dans une console de commande :
-      - ollama pull llama3:8b
-      - ollama pull mixtral:8x7b
--> effectuer les migrations : 
-    - python manage.py makemigrations
-    - python manage.py migrate
--> lancer le serveur Django : python manage.py runserver
+-> Clone du repo  
+-> Création de l'environnement virtuel et installation des dépendances  
+    python -m venv .env  
+    .venv\Scripts\activate    (sous Windows)  
+    pip install -r requirements.txt  
+-> Variables d'environnement : jeu de test proposé  
+-> Installation d'Ollama : installer les modèles proposés (au moins llama3, plus léger ~3 à 4 GB)  
+    Dans une console de commande :  
+      - ollama pull llama3:8b  
+      - ollama pull mixtral:8x7b  
+-> effectuer les migrations :  
+    - python manage.py makemigrations  
+    - python manage.py migrate  
+-> lancer le serveur Django : python manage.py runserver  
 
 ## 3) User Guide
 
