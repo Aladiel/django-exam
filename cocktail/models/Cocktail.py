@@ -9,11 +9,15 @@ class Cocktail(models.Model):
     # Contient uniquement la suggestion du User (pas d'upload direct de musique)
     music = models.TextField(max_length=120, blank=True)
 
-    # prompt pour la génération d'image via Midjourney : généré par IA via la liste d'ingrédients et l'éventuelle
+    # prompt pour la génération d'image via Stable Diffusion : généré par IA via la liste d'ingrédients et l'éventuelle
     # description
     image_prompt = models.TextField(blank=True, null=True)
+    translated_prompt = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='cocktails/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # Choix du modèle parmi une liste (llama3 ou mixtral)
+    model_used = models.CharField(max_length=50, default="llama3")
 
     def __str__(self):
         return self.name
