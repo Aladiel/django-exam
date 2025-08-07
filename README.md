@@ -45,7 +45,7 @@ Stack : Django, Langchain, Ollama, Stable Diffusion XL, TailwindCSS, Docker
     python -m venv .env  
     .venv\Scripts\activate    (sous Windows)  
     pip install -r requirements.txt  
--> Variables d'environnement : jeu de test proposé  
+-> Variables d'environnement : jeu de test proposé  (.env.demo)
 -> Installation d'Ollama : installer les modèles proposés (au moins llama3, plus léger ~3 à 4 GB)  
     Dans une console de commande :  
       - ollama pull llama3:8b  
