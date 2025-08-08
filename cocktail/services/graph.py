@@ -1,4 +1,5 @@
 import inspect
+import logging
 
 from django.core.files import File
 from django.utils.text import slugify
@@ -15,13 +16,16 @@ from ..models.Cocktail import Cocktail
 IMAGE_GEN_ENABLED = config("IMAGE_GEN_ENABLED", cast=bool, default=True)
 AVAILABLE_MODELS = ["llama3:8b", "mixtral:8x7b"]
 SDXL_KEY = config("SDXL_KEY")
+logger = logging.getLogger(__name__)
 
 def get_llm(model_name):
+    base_url = config("OLLAMA_HOST", "http://localhost:11434")
     return ChatOllama(model=model_name)
 
 def handleError(state, e):
     caller = inspect.stack()[1].function
     print(f"[{caller}] Erreur LLM : {e}")
+    logger.exception(f"Erreur lors de la génération du cocktail : {e}")
     state.reply = (
         "Désolé, je n’ai pas réussi à générer la fiche cocktail cette fois-ci. "
         "Merci de reformuler votre demande ou réessayez plus tard."
@@ -34,6 +38,7 @@ def safe_model_choice(model_name):
     return model_name
 
 class CocktailState(BaseModel):
+    cocktail_id: Optional[int] = None
     user_prompt: Optional[str] = None
     is_cocktail: bool = False
     ingredients: Optional[list] = None
@@ -210,6 +215,9 @@ def generate_cocktail(state: CocktailState) -> CocktailState:
             with open(image_file_path, "rb") as f:
                 cocktail.image.save(image_relative_path, File(f), save=False)
         cocktail.save()
+        state.cocktail_id = cocktail.id
+        print("DEBUG graph: ID généré et sauvegardé =", cocktail.id)
+
     except Exception as e:
         print(f"[generate_cocktail] Erreur sauvegarde BDD : {e}")
         state.reply = "Impossible d'enregistrer le cocktail en base de données. "
@@ -277,12 +285,18 @@ graph.add_node("generate_cocktail", generate_cocktail)
 graph.add_node("acknowledge_cocktail", acknowledge_cocktail_creation)
 graph.add_node("respond_to_user", respond_to_user)
 
+
+
 graph.set_entry_point("detect_cocktail")
 graph.add_conditional_edges(
     "detect_cocktail",
     lambda state: "extract_JSON" if state.is_cocktail else "respond_to_user",
 )
-graph.add_edge("extract_JSON", "generate_image_prompt")
+graph.add_conditional_edges("extract_JSON",
+                            lambda state: "generate_image_prompt" if state.name and state.ingredients else "respond_to_user",
+                            )
+
+# graph.add_edge("extract_JSON", "generate_image_prompt")
 graph.add_edge("generate_image_prompt", "translate_image_prompt")
 graph.add_edge("translate_image_prompt", "call_sdxl_api")
 graph.add_edge("call_sdxl_api", "generate_cocktail")

@@ -22,7 +22,14 @@ USER appuser
 EXPOSE 8000
 
 # RUN python manage.py collectstatic --noinput          à décommenter pour la prod
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]     #  inversement, à commenter en prod
 
-# CMD pour PROD (décommente pour prod, adapte le chemin wsgi si besoin)
-# CMD ["gunicorn", "mon_projet.wsgi:application", "--bind", "0.0.0.0:8000"]
+# === Présent par sécurité, mais ne sera jamais exécuté - la commande du docker-compose prend la priorité ===
+CMD if [ "$MODE" = "prod" ]; then \
+      python manage.py migrate && \
+      python manage.py collectstatic --noinput && \
+      gunicorn Make_your_cocktAIl.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 4 --timeout 120 --graceful-timeout 30; \
+    else \
+      python manage.py migrate && \
+      python manage.py runserver 0.0.0.0:8000 ; \
+    fi
+

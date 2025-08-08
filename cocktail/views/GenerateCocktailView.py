@@ -7,6 +7,8 @@ from django.shortcuts import render
 
 def generate_cocktail_view(request):
     result = None
+    reply = None
+
     if request.method == 'POST':
         form = CocktailRequestForm(request.POST)
         if form.is_valid():
@@ -14,15 +16,21 @@ def generate_cocktail_view(request):
             model = form.cleaned_data['model_name']
             model_used = safe_model_choice(model)
 
-            state = CocktailState(user_prompt=prompt, model_used=model_used)
-            assistant_graph.invoke(state)
+            # Récupération du state
+            initial_state = CocktailState(user_prompt=prompt, model_used=model_used)
 
-            if Cocktail.objects.exists():
-                generated_cocktail = Cocktail.objects.latest('created_at')
+            # Exécution du graph -> renvoie un dictionnaire qu'on transforme de nouveau en state
+            final_state_dict = assistant_graph.invoke(initial_state)
+            final_state = CocktailState(**final_state_dict)
+
+            # Si le cocktail existe (i.e s'il possède un id), on récupère l'objet. Sinon : on n'affiche rien,
+            # mais on récupère le 'reply' qui contiendra tout de même une réponse de l'IA
+            if final_state.cocktail_id:
+                result = Cocktail.objects.get(id=final_state.cocktail_id)
             else:
-                generated_cocktail = None
-            result = generated_cocktail
+                result = None
+                reply = getattr(final_state, 'reply', None)
 
     else:
         form = CocktailRequestForm()
-    return render(request, "cocktail/generate.html", {"form": form, "result": result})
+    return render(request, "cocktail/generate.html", {"form": form, "result": result, "reply": reply})
