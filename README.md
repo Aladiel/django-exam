@@ -56,4 +56,13 @@ Stack : Django, Langchain, Ollama, Stable Diffusion XL, TailwindCSS, Docker
 -> lancer le serveur Django : python manage.py runserver  
 
 ## 3) User Guide
+Une fois le serveur lancé :  
+http://localhost:8000/  -> redirige sur la galerie http://localhost:8000/cocktails/  
+La galerie présente la liste des cocktails créés, avec les images associées, le nom, la musique suggérée, une brève description et la liste d'ingrédients.  
+Un filtre est disponible pour trier les résultats selon différents critères : date de création, nom, modèle utilisé.  
+Note : pour le modèle utilisé, il me faudrait rajouté la mention du modèle dans la présentation des cocktails.  
 
+Depuis la galerie : bouton "Nouveau cocktail", ou http://localhost:8000/generate/  -> page de création de cocktails  
+Zone de texte pour écrire le prompt : le modèle est prévu pour créer des cocktails. Il peut répondre aux questions générales, mais est censé recadrer l'utilisateur sur son utilité première (censé, car Mixtral le fait bien mais llama3 a plus de mal)  
+Choix du modèle à sélectionner.
+Bouton Submit "Shaker !"
